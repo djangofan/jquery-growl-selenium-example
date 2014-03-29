@@ -5,7 +5,7 @@
 	<artifactId>jquery-growl-selenium-example</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<properties>
-		<selenium.version>2.39.0</selenium.version>
+		<selenium.version>2.41.0</selenium.version>
 		<maven.surefire.plugin.version>2.16</maven.surefire.plugin.version>
 		<testng.version>6.8.7</testng.version>
 	</properties>
