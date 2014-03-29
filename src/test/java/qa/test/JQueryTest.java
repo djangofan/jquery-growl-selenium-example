@@ -2,9 +2,11 @@ package qa.test;
 
 import java.io.IOException;
 import java.net.URL;
+
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.testng.Reporter;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Charsets;
@@ -36,23 +38,23 @@ public class JQueryTest {
 		} catch ( IOException ioe ) {
 			ioe.printStackTrace();
 		}
-		System.out.println("Executing '" + JQUERY_SCRIPT + "' to load within WebDriver instance...");
+		Reporter.log("Executing '" + JQUERY_SCRIPT + "' to load within WebDriver instance...", true );
         js.executeScript( jqueryText );
-        System.out.println("Done loading jQuery.");
+        Reporter.log("Done loading jQuery.", true );
         js.executeScript( jgrowlText );
         
         // try some basic javascript
-        System.out.println("Executing a Javascript command to verify everything is ok...");
+        Reporter.log("Executing a Javascript command to verify everything is ok...", true );
         js.executeScript( "document.getElementById( 'textFieldTestInputControlID' ).scrollIntoView(); " );
-        System.out.println("Done with Javascript command.");
+        Reporter.log("Done with Javascript command.", true );
         
         // type some text using Jquery to verify jquery works
-        System.out.println("Executing a jquery click command to verify jQuery loaded...");
+        Reporter.log("Executing a jquery click command to verify jQuery loaded...", true );
         js.executeScript( "$(\"#textFieldTestInputControlID\").val(\"Test\");$(\"#textFieldTestProcessButtonID\").click();" );
-        System.out.println("Done with click command.");
+        Reporter.log("Done with click command.", true );
 		
         // load jgrowl css using jquery
-        //js.executeScript( "$(\"<link/>\", { rel: \"stylesheet\", type: \"text/css\", href: \"jquery.jgrowl.css\"}).appendTo(\"head\");" );
+        js.executeScript( "$(\"<link/>\", { rel: \"stylesheet\", type: \"text/css\", href: \"jquery.jgrowl.css\"}).appendTo(\"head\");" );
         
 		// test jgrowl
 		js.executeScript( "$.jGrowl(\"A message that will live a little longer.\", { life: 10000 }); " );
