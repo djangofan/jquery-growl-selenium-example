@@ -1,15 +1,15 @@
 package qa.test;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.apache.commons.io.Charsets;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.testng.Reporter;
 import org.testng.annotations.Test;
 
-import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
 
 /**
@@ -19,63 +19,41 @@ import com.google.common.io.Resources;
 public class JQueryTest {
 
 	// its nice to keep JavaScript snippets in separate files.
-	private final String JQUERY_SCRIPT = "jquery-1.9.0.js";
-	private final String JGROWL_SCRIPT = "jquery.jgrowl-1.2.13.js";
-	private final String JGROWL_STYLE = "jquery.jgrowl.css";
+	private final String JGROWL_SCRIPT = "http://cdnjs.cloudflare.com/ajax/libs/jquery-jgrowl/1.2.12/jquery.jgrowl.min.js";
+	private final String JQUERY_SCRIPT = "http://code.jquery.com/jquery-1.11.1.min.js";
+	private final String JGROWL_STYLE = "http://cdnjs.cloudflare.com/ajax/libs/jquery-jgrowl/1.2.12/jquery.jgrowl.min.css";
 
-    @Test
+	@Test
 	public void runTest() {
 		WebDriver driver = new FirefoxDriver();
-		driver.get("data:text/html,<html><head></head><body><h2>This is a <i>test</i></h2></body></html>");
+		driver.get("data:text/html,<html><head></head><body><h2>Test of <i>jGrowl</i> messaging.</h2></body></html>");
 
-        JavascriptExecutor js = (JavascriptExecutor) driver;
-        URL jqueryUrl = Resources.getResource( JQUERY_SCRIPT );
-        URL jgrowlUrl = Resources.getResource( JGROWL_SCRIPT );
-        URL styleUrl = Resources.getResource( JGROWL_STYLE );
-        String jqueryLoc = null;
-        String jgrowlLoc = null;
-        String styleLoc = null;
-		try {
-			jqueryLoc = Resources.toString( jqueryUrl, Charsets.UTF_8 );
-			jgrowlLoc = Resources.toString( jgrowlUrl, Charsets.UTF_8 );
-			styleLoc = Resources.toString( styleUrl , Charsets.UTF_8 );
-		} catch ( IOException ioe ) {
-			ioe.printStackTrace();
-		}
-		Reporter.log("Executing '" + JQUERY_SCRIPT + "' to load within WebDriver instance...", true );
-        js.executeScript( jqueryLoc );
-		//js.executeScript( "if (!window.jQuery) { var jquery = document.createElement('script'); jquery.type = 'text/javascript'; jquery.src = '" + jqueryLoc + "'; document.getElementsByTagName('head')[0].appendChild(jquery);}" );
-        //js.executeScript( "if (!window.jQuery) { var jquery = document.createElement('script'); jquery.type = 'text/javascript'; jquery.src = 'https://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js'; document.getElementsByTagName('head')[0].appendChild(jquery); }" );
-		
-        Reporter.log("Done loading jQuery.", true );
-        js.executeScript( jgrowlLoc );
-        //js.executeScript( "$.getScript( '" + JGROWL_SCRIPT + "' )");
-        //js.executeScript( "$.getScript('http://the-internet.herokuapp.com/js/vendor/jquery.growl.js')" );
-        
-        // try some basic javascript
-        //Reporter.log("Executing a Javascript command to verify everything is ok...", true );
-        //js.executeScript( "document.getElementById( 'textFieldTestInputControlID' ).scrollIntoView(); " );
-        //Reporter.log("Done with Javascript command.", true );
-        
-        // type some text using Jquery to verify jquery works
-        //Reporter.log("Executing a jquery click command to verify jQuery loaded...", true );
-        //js.executeScript( "$(\"#textFieldTestInputControlID\").val(\"Test\");$(\"#textFieldTestProcessButtonID\").click();" );
-        //Reporter.log("Done with click command.", true );
-		
-        // load jgrowl css using jquery
-        js.executeScript( "$('head').append('<link rel=\"stylesheet\" href=\"" + JGROWL_STYLE + "\" type=\"text/css\" />');" );
-        //js.executeScript( "$('head').append('<link rel=\"stylesheet\" href=\"http://the-internet.herokuapp.com/css/jquery.growl.css\" type=\"text/css\" />');" );
-        
+		JavascriptExecutor js = (JavascriptExecutor) driver;
+
+
+		js.executeScript( "var jq = document.createElement('script'); jq.type = 'text/javascript'; jq.src = '" +
+				JQUERY_SCRIPT + "'; document.getElementsByTagName('head')[0].appendChild(jq);" );
+
+		js.executeScript( "$.getScript(\"" + JGROWL_SCRIPT + "\");" );
+
+		js.executeScript( "var lnk = document.createElement('link'); lnk.rel = 'stylesheet'; lnk.href = '" +
+			    JGROWL_STYLE + "'; lnk.type = 'text/css'; document.getElementsByTagName('head')[0].appendChild(lnk);" );
+
+
 		// test jgrowl
-		js.executeScript( "$.jGrowl(\"A message that will live a little longer.\", { life: 10000 }); " );
-		js.executeScript( "$.growl({ title: 'GET', message: '/' });" );
-		
-        try {
+		js.executeScript( "$.jGrowl('Hello world!');" );
+		js.executeScript( "$.jGrowl('Stick this!', { sticky: true });" );
+		js.executeScript( "$.jGrowl('A message with a header', { header: 'Important' });" );
+		js.executeScript( "$.jGrowl('A message that will live a little longer.', { life: 10000 });" );
+		//js.executeScript( "$.jGrowl('A message with a beforeOpen callback and a different opening animation.', " +
+		//    "{ beforeClose: function(e,m) { alert('About to close this notification!'); }, animateOpen: {height: 'show' }});" );
+
+		try {
 			Thread.sleep(30000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-        
+
 		driver.quit();
 	}
 
