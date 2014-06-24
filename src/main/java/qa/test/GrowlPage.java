@@ -37,7 +37,7 @@ public class GrowlPage extends LoadableComponent<GrowlPage> {
 	protected void isLoaded() throws Error {
 		Reporter.log( "Is page loaded.", true );
 		sleep( 1000 );
-		Boolean loaded = (Boolean)executeJavascript( "return typeof jQuery=='function';" ); 
+		Boolean loaded = (Boolean)executeJavascript( "return (typeof jQuery=='function');" ); 
 		assertTrue( loaded, "It seems that jQuery is not loaded." );
 	}
 	
