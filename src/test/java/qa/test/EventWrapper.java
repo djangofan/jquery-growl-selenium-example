@@ -54,12 +54,4 @@ public class EventWrapper extends AbstractWebDriverEventListener {
 		}
 	}
 
-	public EventFiringWebDriver getDriver() {
-		return drv;
-	}
-
-	public void setDriver( EventFiringWebDriver drv ) {
-		this.drv = drv;
-	}
-
 }
