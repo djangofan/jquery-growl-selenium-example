@@ -1,27 +1,31 @@
 package qa.test;
 
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.events.AbstractWebDriverEventListener;
-import org.openqa.selenium.support.events.EventFiringWebDriver;
 
 public class EventWrapper extends AbstractWebDriverEventListener {
 	
-	private String standardHeader = "Selenium Event";
+	private String standardHeader = "Selenium Internal Event";
 	private JavascriptExecutor js;
-	private EventFiringWebDriver drv;
+	private WebDriver drv;
 	
-	// its nice to keep JavaScript snippets in separate files.
     private final String JGROWL_SCRIPT = "http://cdnjs.cloudflare.com/ajax/libs/jquery-jgrowl/1.2.12/jquery.jgrowl.min.js";
     private final String JQUERY_SCRIPT = "http://code.jquery.com/jquery-1.11.1.min.js";
     private final String JGROWL_STYLE = "http://cdnjs.cloudflare.com/ajax/libs/jquery-jgrowl/1.2.12/jquery.jgrowl.min.css";
     
-	public EventWrapper( EventFiringWebDriver efwd ) {
-		this.drv = efwd;
+	public EventWrapper( WebDriver wd ) {
+		this.drv = wd;
 		if ( js == null ) enableGrowl( drv );
 	}
 
-	public void afterNavigateTo( String url, EventFiringWebDriver driver ) {
+	public void afterNavigateTo( String url, WebDriver wd ) {
 		displayGrowl( "Navigated to URL '" + url + "'." );
+	}
+	
+	public void afterClickOn( WebElement el, WebDriver wd ) {
+		displayGrowl( "Clicked on element '" + el.getTagName() + "'." );
 	}
 
 	public void displayGrowl( String message ) {		
@@ -32,8 +36,8 @@ public class EventWrapper extends AbstractWebDriverEventListener {
 		js.executeScript( "$.jGrowl('" + message + "', { header: '" + standardHeader + "', life: " + life + " });" );		
 	}
 
-	private void enableGrowl( EventFiringWebDriver driver ) {
-		this.drv = driver;
+	private void enableGrowl( WebDriver wd ) {
+		this.drv = wd;
 		js = (JavascriptExecutor)drv;
 		//TODO Add check for existing jQuery on page
 
@@ -43,9 +47,7 @@ public class EventWrapper extends AbstractWebDriverEventListener {
 		js.executeScript( "$.getScript(\"" + JGROWL_SCRIPT + "\");" );
 
 		js.executeScript( "var lnk = document.createElement('link'); lnk.rel = 'stylesheet'; lnk.href = '" +
-		JGROWL_STYLE + "'; lnk.type = 'text/css'; document.getElementsByTagName('head')[0].appendChild(lnk);" );
-		
-		displayGrowl( "Logging with jGrowl enabled.", 2000 );	
+		JGROWL_STYLE + "'; lnk.type = 'text/css'; document.getElementsByTagName('head')[0].appendChild(lnk);" );	
 		
 		try {
 			Thread.sleep(2000);
