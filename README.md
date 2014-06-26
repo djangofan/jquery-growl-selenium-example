@@ -3,6 +3,11 @@ jquery-growl-selenium-example
 
 Example using jGrowl with Selenium
 
+If you want to see what this project does, just watch this video:
+https://vimeo.com/99202337
+If the video doesn't play, there is download link
+
+
 Running it
 =============================
 
